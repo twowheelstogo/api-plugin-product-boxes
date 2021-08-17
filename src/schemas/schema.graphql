@@ -1,0 +1,85 @@
+type ProductBundle {
+    "The ID of the product bundle"
+    _id: ID!
+
+    "Default name for a bundle"
+    name: String!,
+
+    "Product limit to choose"
+    limit: Int,
+
+    "Linked product ID"
+    productId: ID!
+
+    "Product fields linked"
+    product: Product,
+
+    "Current shop"
+    shop: Shop!,
+
+    "Pricing of bundle"
+    pricing: ProductPricingInfo!
+}
+
+"Mutation input for a product bundle"
+input ProductBundlePricesInput {
+  "Variant compareAtPrice"
+  compareAtPrice: Float
+  "Variant price"
+  price: Float
+}
+
+"Mutation input for a product bundle"
+input ProductBundleInput {
+    "The ID of the product bundle"
+    _id: ID
+
+    "Default name for a bundle"
+    name: String
+
+    "Product limit to choose"
+    limit: Int
+
+    "Pricing of bundle"
+    pricing: ProductBundlePricesInput
+}
+
+input CreateProductBundleInput {
+    "ProductBundle input"
+    productBundle: ProductBundleInput
+
+    "ID of shop product will belong to"
+    shopId: ID!
+
+    "Set to false if you do not want to auto-create the first variant of the product"
+    shouldCreateFirstVariant: Boolean = true
+}
+
+type CreateProductBundlePayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created product bundle"
+  productBundle: ProductBundle
+}
+
+extend type Query {
+    productBundle(
+    "Product ID"
+    productId: ID
+
+    "Shop ID"
+    shopId: ID!
+
+    "bundle ID"
+    bundleId: ID
+    ): ProductBundle
+}
+
+extend type Mutation {
+    "Create a new product bundle"
+    createProductBundle(
+        "Mutation input"
+        input: CreateProductBundleInput!
+    ): CreateProductBundlePayload!
+}
