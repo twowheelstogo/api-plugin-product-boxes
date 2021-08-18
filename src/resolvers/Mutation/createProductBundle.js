@@ -1,4 +1,4 @@
-import { decodeShopOpaqueId, decodeTagOpaqueId } from "../../xforms/id.js";
+import { decodeShopOpaqueId } from "../../xforms/id.js";
 
 /**
  * @method Mutation/createProductBundle

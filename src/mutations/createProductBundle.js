@@ -1,6 +1,6 @@
 import SimpleSchema from "simpl-schema";
 import { ProductBundle } from "../simpleSchemas.js";
-import { createProduct } from "../utils/index.js";
+import { createProduct, createProductVariant } from "../utils/index.js";
 import Random from "@reactioncommerce/random";
 
 const inputSchema = new SimpleSchema({
@@ -24,7 +24,7 @@ export default async function createProductBundle(context, input) {
     const cleanedInput = inputSchema.clean(input);
     const { collections } = context;
     const { Bundles } = collections;
-    const { shopId, productBundle: productBundleInput} = cleanedInput;
+    const { shopId, productBundle: productBundleInput } = cleanedInput;
 
     const newProductBundleId = (productBundleInput && productBundleInput._id) || Random.id();
 
@@ -35,12 +35,22 @@ export default async function createProductBundle(context, input) {
             description: "Product generated from Bundle"
         }
     });
-    console.log("product", product)
+    const { variant } = await createProductVariant(context, {
+        shopId,
+        productId: product && product?._id,
+        variant: {
+            price: productBundleInput?.price,
+            compareAtPrice: productBundleInput?.price
+        }
+    });
     const productBundle = {
         _id: newProductBundleId,
         productId: product && product?._id,
+        variantId: variant && variant?._id,
         shopId: shopId,
-        ...productBundleInput
+        name: productBundleInput?.name,
+        description: productBundleInput?.description,
+        subtitle: productBundleInput?.subtitle
     };
 
     ProductBundle.validate(productBundle);

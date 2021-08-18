@@ -3,22 +3,37 @@ type ProductBundle {
     _id: ID!
 
     "Default name for a bundle"
-    name: String!,
+    name: String
+    
+    "Description for a bundle"
+    description: String
+
+    "Subtitle for a bundle"
+    subtitle: String
 
     "Product limit to choose"
-    limit: Int,
+    limit: Int
 
     "Linked product ID"
     productId: ID!
 
+    "Variant ID"
+    variantId: ID!
+
     "Product fields linked"
-    product: Product,
+    product: Product
+
+    "item ID's linked to bundle"
+    itemIds: [ID]
+
+    "media for a bundle"
+    media: [ImageInfo]
+
+    "Product options to choose"
+    items: [Product]
 
     "Current shop"
-    shop: Shop!,
-
-    "Pricing of bundle"
-    pricing: ProductPricingInfo!
+    shop: Shop!
 }
 
 "Mutation input for a product bundle"
@@ -36,12 +51,35 @@ input ProductBundleInput {
 
     "Default name for a bundle"
     name: String
+    
+    "Description for a bundle"
+    description: String
+
+    "Subtitle for a bundle"
+    subtitle: String
 
     "Product limit to choose"
     limit: Int
 
     "Pricing of bundle"
-    pricing: ProductBundlePricesInput
+    price: Float
+
+    "CompareAtPrice of bundle"
+    compareAtPrice: Float
+}
+
+input AddBundleItemsInput {
+    "Item ID's to add into a bundle"
+    itemIds: [ID]!
+
+    "Bundle ID to udpate"
+    bundleId: ID!
+    
+    "Shop ID for a bundle"
+    shopId: ID!
+
+    "Client mutation ID"
+    clientMutationId: ID
 }
 
 input CreateProductBundleInput {
@@ -55,8 +93,49 @@ input CreateProductBundleInput {
     shouldCreateFirstVariant: Boolean = true
 }
 
+"A connection edge in which each node is a `ProductBundle` object"
+type ProductBundleEdge {
+  "The cursor that represents this node in the paginated results"
+  cursor: ConnectionCursor!
+
+  "The product Bundle"
+  node: ProductBundle
+}
+
+"""
+Wraps a list of ProductBundles`s, providing pagination cursors and information.
+
+For information about what Relay-compatible connections are and how to use them, see the following articles:
+- [Relay Connection Documentation](https://facebook.github.io/relay/docs/en/graphql-server-specification.html#connections)
+- [Relay Connection Specification](https://facebook.github.io/relay/graphql/connections.htm)
+- [Using Relay-style Connections With Apollo Client](https://www.apollographql.com/docs/react/recipes/pagination.html)
+"""
+type ProductBundleConnection {
+  "The list of nodes that match the query, wrapped in an edge to provide a cursor string for each"
+  edges: [ProductBundle]
+
+  """
+  You can request the `nodes` directly to avoid the extra wrapping that `NodeEdge` has,
+  if you know you will not need to paginate the results.
+  """
+  nodes: [ProductBundle]
+
+  "Information to help a client request the next or previous page"
+  pageInfo: PageInfo!
+
+  "The total number of nodes that match your query"
+  totalCount: Int!
+}
+
 type CreateProductBundlePayload {
-  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created product bundle"
+  productBundle: ProductBundle
+}
+type AddBundleItemsPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
   clientMutationId: String
 
   "The created product bundle"
@@ -64,7 +143,8 @@ type CreateProductBundlePayload {
 }
 
 extend type Query {
-    productBundle(
+  "Query for a single ProductBundle"
+  productBundle(
     "Product ID"
     productId: ID
 
@@ -73,7 +153,48 @@ extend type Query {
 
     "bundle ID"
     bundleId: ID
-    ): ProductBundle
+
+  ): ProductBundle
+
+  "Query for a list of ProductBundles"
+  productBundles(
+    "Filter by metafield key"
+    metafieldKey: String
+
+    "Filter by metafield value"
+    metafieldValue: String
+
+    "List of product IDs to filter by"
+    productIds: [ID]
+
+    "List of bundle IDs to filter by"
+    bundleIds: [ID]
+
+    "Regex metch query string"
+    query: String
+
+    "List of shop IDs to filter by"
+    shopIds: [ID]!
+
+    "Return only results that come after this cursor. Use this with `first` to specify the number of results to return."
+    after: ConnectionCursor,
+
+    "Return only results that come before this cursor. Use this with `last` to specify the number of results to return."
+    before: ConnectionCursor,
+
+    "Return at most this many results. This parameter may be used with either `after` or `offset` parameters."
+    first: ConnectionLimitInt,
+
+    "Return at most this many results. This parameter may be used with the `before` parameter."
+    last: ConnectionLimitInt,
+
+    "Return only results that come after the Nth result. This parameter may be used with the `first` parameter."
+    offset: Int,
+
+    "Return results sorted in this order"
+    sortOrder: SortOrder = desc,
+
+  ): ProductBundleConnection
 }
 
 extend type Mutation {
@@ -82,4 +203,9 @@ extend type Mutation {
         "Mutation input"
         input: CreateProductBundleInput!
     ): CreateProductBundlePayload!
+    
+    "add more items to the bundle"
+    addBundleItems(
+        input: AddBundleItemsInput!
+    ): AddBundleItemsPayload!
 }

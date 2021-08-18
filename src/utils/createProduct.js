@@ -14,16 +14,15 @@ export default async function createProduct(context, input) {
     if (!product) throw new ReactionError("missing-param", "product is required");
 
     product.productType = "bundle";
-    console.log("productInput",product);
     try {
         const data = await context.mutations.createProduct(context, {
             product,
-            shopId
+            shopId,
+            shouldCreateFirstVariant: false
         });
 
-        console.log("createProduct", data);
-
         return { product: data };
+
     } catch (error) {
         throw new ReactionError("server-error", error.message);
     }
