@@ -13,6 +13,9 @@
             "price": "Precio",
             "published": "Estado",
             "visible": "Visible"
+          },
+          "filters":{
+            "placeholder": "Filtrar bundles"
           }
         }
       }
