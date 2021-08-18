@@ -32,6 +32,9 @@ type ProductBundle {
     "Product options to choose"
     items: [Product]
 
+    "Updated datetime"
+    updatedAt: DateTime!
+
     "Current shop"
     shop: Shop!
 }
@@ -134,7 +137,27 @@ type CreateProductBundlePayload {
   "The created product bundle"
   productBundle: ProductBundle
 }
+
 type AddBundleItemsPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created product bundle"
+  productBundle: ProductBundle
+}
+
+input UpdateProductBundleInput {
+  "product bundle input"
+  productBundle: ProductBundleInput!
+
+  "ID of bundle to updated"
+  bundleId: ID!
+
+  "ID of shop that owns the product bundle to update"
+  shopId: ID!
+}
+
+type UpdateProductBundlePayload {
   "The same string you sent with the mutation params for matching mutation calls with their responses"
   clientMutationId: String
 
@@ -206,6 +229,13 @@ extend type Mutation {
     
     "add more items to the bundle"
     addBundleItems(
+        "Mutation input"
         input: AddBundleItemsInput!
     ): AddBundleItemsPayload!
+
+    "Update an existing bundle"
+    updateProductBundle(
+      "Mutation input"
+        input: UpdateProductBundleInput!
+    ): UpdateProductBundlePayload!
 }

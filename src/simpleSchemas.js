@@ -17,6 +17,10 @@ export const ProductBundle = new SimpleSchema({
         type: String,
         optional: true
     },
+    createdAt: {
+        type: Date,
+        optional: true
+    },
     name: {
         type: String,
         optional: true
@@ -49,9 +53,30 @@ export const ProductBundle = new SimpleSchema({
         type: Number,
         optional: true,
     },
+    updatedAt: {
+        type: Date,
+        optional: true
+    },
     compareAtPrice: {
         type: Number,
         optional: true
+    },
+    Product: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    itemIds: {
+        type: Array,
+        optional: true
+    },
+    "itemIds.$": {
+        type: String,
+        blackbox: true
+    },
+    media: {
+        type: Object,
+        blackbox: true,
+        optional: true
     }
-
-})
+});
