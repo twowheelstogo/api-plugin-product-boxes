@@ -1,0 +1,21 @@
+[{
+  "i18n": "es",
+  "ns": "reaction-product-boxes",
+  "translation": {
+    "reaction-product-boxes": {
+      "admin": {
+        "bundles": "Bundles",
+        "createProductBundle": "Agregar Bundle",
+        "productBundleTable": {
+          "header": {
+            "product": "Producto",
+            "id":"ID",
+            "price": "Precio",
+            "published": "Estado",
+            "visible": "Visible"
+          }
+        }
+      }
+    }
+  }
+}]

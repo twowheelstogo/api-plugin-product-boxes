@@ -3,6 +3,8 @@ import resolvers from "./resolvers/index.js";
 import schemas from "./schemas/index.js";
 import queries from "./queries/index.js";
 import mutations from "./mutations/index.js";
+import i18n from "./i18n/index.js";
+
 /**
  * @summary Import and call this function to add this plugin to your API.
  * @param {ReactionAPI} app The ReactionAPI instance
@@ -13,6 +15,7 @@ export default async function register(app) {
     label: "Product Boxes",
     name: "product-boxes",
     version: pkg.version,
+    i18n,
     collections: {
       Bundles: {
         name: "Bundles"

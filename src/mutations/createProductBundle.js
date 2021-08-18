@@ -4,7 +4,10 @@ import { createProduct, createProductVariant } from "../utils/index.js";
 import Random from "@reactioncommerce/random";
 
 const inputSchema = new SimpleSchema({
-    productBundle: ProductBundle,
+    productBundle: {
+        type: ProductBundle,
+        optional: true
+    },
     shopId: String,
     shouldCreateFirstVariant: {
         type: Boolean,
@@ -31,8 +34,8 @@ export default async function createProductBundle(context, input) {
     const { product } = await createProduct(context, {
         shopId,
         product: {
-            title: productBundleInput.name,
-            description: "Product generated from Bundle"
+            title: productBundleInput?.name || "Product generated from bundle",
+            description: productBundleInput?.description || "Product generated from Bundle"
         }
     });
     const { variant } = await createProductVariant(context, {
@@ -48,9 +51,9 @@ export default async function createProductBundle(context, input) {
         productId: product && product?._id,
         variantId: variant && variant?._id,
         shopId: shopId,
-        name: productBundleInput?.name,
-        description: productBundleInput?.description,
-        subtitle: productBundleInput?.subtitle
+        name: productBundleInput?.name || "Product Generated from bundle",
+        description: productBundleInput?.description || "Product Generated from bundle",
+        subtitle: productBundleInput?.subtitle || "Product Generated from bundle"
     };
 
     ProductBundle.validate(productBundle);
