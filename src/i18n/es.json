@@ -16,6 +16,12 @@
           },
           "filters":{
             "placeholder": "Filtrar bundles"
+          },
+          "bundle":{
+            "tabs": {
+              "setup": "Configuración",
+              "products": "Productos"
+            }
           }
         }
       }
