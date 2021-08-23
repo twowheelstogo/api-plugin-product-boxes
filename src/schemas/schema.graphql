@@ -146,6 +146,29 @@ type AddBundleItemsPayload {
   productBundle: ProductBundle
 }
 
+input RemoveBundleItemsInput {
+    "Item ID's to add into a bundle"
+    itemIds: [ID]!
+
+    "Bundle ID to udpate"
+    bundleId: ID!
+    
+    "Shop ID for a bundle"
+    shopId: ID!
+
+    "Client mutation ID"
+    clientMutationId: ID
+  
+}
+
+type RemoveBundleItemsPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created product bundle"
+  productBundle: ProductBundle
+}
+
 input UpdateProductBundleInput {
   "product bundle input"
   productBundle: ProductBundleInput!
@@ -238,4 +261,10 @@ extend type Mutation {
       "Mutation input"
         input: UpdateProductBundleInput!
     ): UpdateProductBundlePayload!
+
+    "remove items to the bundle"
+    removeBundleItems(
+      "Mutation input"
+        input: RemoveBundleItemsInput!
+    ): RemoveBundleItemsPayload!
 }

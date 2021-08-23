@@ -7,7 +7,7 @@
  *   Skipping this is not recommended for new code.
  * @returns {Object}  and `updatedItemList` props
  */
-export default async function addCartItems(currentItems, inputItems) {
+export default async function addBundleItems(currentItems, inputItems) {
     const updatedItemList = currentItems || [];
 
     for (var index in inputItems) {
