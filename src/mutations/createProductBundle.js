@@ -2,6 +2,7 @@ import SimpleSchema from "simpl-schema";
 import { ProductBundle } from "../simpleSchemas.js";
 import { createProduct, createProductVariant } from "../utils/index.js";
 import Random from "@reactioncommerce/random";
+import insertTagUtil from "../utils/insertTag.js";
 
 const inputSchema = new SimpleSchema({
     productBundle: {
@@ -26,18 +27,38 @@ export default async function createProductBundle(context, input) {
     inputSchema.validate(input);
     const cleanedInput = inputSchema.clean(input);
     const { collections } = context;
-    const { Bundles } = collections;
+    const { Bundles, Tags } = collections;
     const { shopId, productBundle: productBundleInput } = cleanedInput;
 
     const newProductBundleId = (productBundleInput && productBundleInput._id) || Random.id();
 
+    const currentTag = await Tags.findOne({
+        slug: "boxes"
+    });
+
+    let tag = currentTag;
+
+    //**if tag does not exists, create a new one */
+    if (!currentTag) tag = await insertTagUtil(context, { shopId });
+
+    /**creates a product related to the bundle*/
     const { product } = await createProduct(context, {
         shopId,
         product: {
             title: productBundleInput?.name || "Product generated from bundle",
-            description: productBundleInput?.description || "Product generated from Bundle"
+            description: productBundleInput?.description || "Product generated from Bundle",
         }
     });
+
+    /**Insert a tag into a created product */
+
+    await context.mutations.addTagsToProducts(context, {
+        shopId,
+        productIds: [product._id],
+        tagIds: [tag._id]
+    });
+
+    /**creates a variant related to the product */
     const { variant } = await createProductVariant(context, {
         shopId,
         productId: product && product?._id,
@@ -46,6 +67,7 @@ export default async function createProductBundle(context, input) {
             compareAtPrice: productBundleInput?.price
         }
     });
+
     const productBundle = {
         _id: newProductBundleId,
         productId: product && product?._id,

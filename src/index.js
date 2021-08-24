@@ -4,6 +4,7 @@ import schemas from "./schemas/index.js";
 import queries from "./queries/index.js";
 import mutations from "./mutations/index.js";
 import i18n from "./i18n/index.js";
+import startup from "./startup.js";
 
 /**
  * @summary Import and call this function to add this plugin to your API.
@@ -20,6 +21,9 @@ export default async function register(app) {
       Bundles: {
         name: "Bundles"
       }
+    },
+    functionsByType:{
+      startup: [startup]
     },
     graphQL: {
       resolvers,
