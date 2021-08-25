@@ -8,11 +8,15 @@ import ReactionError from "@reactioncommerce/reaction-error";
  * @param {String} productId - A Product or top level Product ID.
  */
 export default async function getProduct(context, shopId, productId) {
-    
-    if(!productId) throw new ReactionError("required","productId is required");
+    const { collections } = context;
+    const { Products } = collections;
 
-    return context.queries.product(context, {
-        shopId,
-        productId
+    if (!productId) throw new ReactionError("required", "productId is required");
+
+    console.log("productId", productId);
+
+    return Products.findOne({
+        _id: productId,
+        shopId
     })
 }

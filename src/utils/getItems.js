@@ -10,7 +10,9 @@ import ReactionError from "@reactioncommerce/reaction-error";
 export default async function getItems(context, shopId, itemIds) {
     const { collections } = context;
     const { Products } = collections;
+
     if(!itemIds) return [];
+    
     return Products.find({
         _id: {
             $in: itemIds

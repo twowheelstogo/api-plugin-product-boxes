@@ -25,7 +25,6 @@ export default async function productBundle(context, input) {
     if (bundleId) {
         query._id = bundleId;
     }
-    console.log("input", input);
     
     return Bundles.findOne(query);
 }
