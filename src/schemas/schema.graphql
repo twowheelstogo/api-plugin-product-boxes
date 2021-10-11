@@ -39,6 +39,12 @@ type ProductBundle {
     shop: Shop!
 }
 
+extend type CatalogProduct {
+  "A bundle related to Catalog"
+  productBundle: ProductBundle
+}
+
+
 "Mutation input for a product bundle"
 input ProductBundlePricesInput {
   "Variant compareAtPrice"
