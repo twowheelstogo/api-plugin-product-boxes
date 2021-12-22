@@ -7,13 +7,32 @@
  *   Skipping this is not recommended for new code.
  * @returns {Object}  and `updatedItemList` props
  */
-export default async function addBundleItems(currentItems, inputItems) {
-    const updatedItemList = currentItems || [];
+export default async function addBundleItems(currentGroups, groupId, inputItems) {
+    const updatedGroupList = currentGroups || [];
 
-    for (var index in inputItems) {
-        const match = (currentItems || []).find((value) => value == inputItems[index]);
-        if (!match) updatedItemList.push(inputItems[index]);
+    for (var item of inputItems) {
+
+        const match = (updatedGroupList || []).find((group) => {
+
+            return (group.itemIds || []).find((value) => value == item) ? true : false
+        });
+
+
+
+        if (!match) {
+            const index = (updatedGroupList || []).findIndex((group) => group._id == groupId);
+
+            console.log("group index", index);
+            if (index !== -1) {
+                if (Array.isArray(updatedGroupList[index].itemIds)) {
+
+                    updatedGroupList[index].itemIds.push(item);
+                } else {
+                    updatedGroupList[index].itemIds = [item];
+                }
+            }
+        }
     }
 
-    return { updatedItemList };
+    return { updatedGroupList };
 }

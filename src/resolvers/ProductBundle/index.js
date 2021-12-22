@@ -1,7 +1,7 @@
 import { encodeBundleOpaqueId, encodeProductOpaqueId } from "../../xforms/id.js";
 import getProduct from "../../utils/getProduct.js";
-import { getItems } from "../../utils/index.js";
 import resolveShopFromShopId from "@reactioncommerce/api-utils/graphql/resolveShopFromShopId.js";
+import bundleItemsGroups from "./groups.js";
 
 export default {
     _id: (node) => encodeBundleOpaqueId(node._id),
@@ -10,7 +10,6 @@ export default {
     productId: (node) => encodeProductOpaqueId(node.productId),
     shop: resolveShopFromShopId,
     product: (node, __, ctx) => getProduct(ctx, node.shopId, node.productId),
-    itemIds: (node) => node.itemIds,
-    variantId: (node) => node.variantId,
-    items: (node, _, ctx) => getItems(ctx, node.shopId, node.itemIds)
+    groups: (node, __, ctx) => bundleItemsGroups(node.groups, ctx),
+    variantId: (node) => node.variantId
 }

@@ -4,10 +4,9 @@ import ReactionError from "@reactioncommerce/reaction-error";
  * @method getItems
  * @summary Get a current Product for a Single Bundle
  * @param {Object} context - an object containing the per-request state
- * @param {String} shopId - A Shop Id
  * @param {Array} itemIds - A Product or top level Product ID.
  */
-export default async function getItems(context, shopId, itemIds) {
+export default async function getItems(context, itemIds) {
     const { collections } = context;
     const { Products } = collections;
 

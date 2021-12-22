@@ -1,4 +1,4 @@
-import { decodeShopOpaqueId, decodeBundleOpaqueId, decodeProductOpaqueId } from "../../xforms/id.js";
+import { decodeShopOpaqueId, decodeBundleOpaqueId, decodeProductOpaqueId, decodeBundleItemsGroupOpaqueId } from "../../xforms/id.js";
 
 /**
  * @method Mutation/addBundleItems
@@ -18,7 +18,8 @@ export default async function addBundleItems(_, { input }, context) {
         clientMutationId = null,
         bundleId,
         shopId,
-        itemIds: opaqueItemIds
+        itemIds: opaqueItemIds,
+        groupId
     } = input;
 
     const itemIds = opaqueItemIds.map((itemId) => decodeProductOpaqueId(itemId));
@@ -26,6 +27,7 @@ export default async function addBundleItems(_, { input }, context) {
     const productBundle = await context.mutations.addBundleItems(context, {
         shopId: decodeShopOpaqueId(shopId),
         bundleId: decodeBundleOpaqueId(bundleId),
+        groupId: decodeBundleItemsGroupOpaqueId(groupId),
         itemIds
     });
 
