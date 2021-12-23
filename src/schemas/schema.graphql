@@ -228,7 +228,62 @@ type CreateBundleItemsGroupPayload {
   "The same string you sent with the mutation params for matching mutation calls with their responses"
   clientMutationId: String
 
-  "The created product bundle"
+  "The updated product bundle"
+  productBundle: ProductBundle!
+}
+
+input RemoveBundleItemsGroupInput {
+  "Bundle items group ID to update"
+  groupId: ID!
+
+  "Bundle ID to udpate"
+  bundleId: ID!
+  
+  "Shop ID for a bundle"
+  shopId: ID!
+
+  "Client mutation ID"
+  clientMutationId: ID
+}
+
+type RemoveBundleItemsGroupPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The updated product bundle"
+  productBundle: ProductBundle!
+}
+
+input BundleItemsGroupInput {
+  "The title for the bundle"
+  title: String
+
+  "The selection limit for the bundle"
+  limit: Int
+}
+
+input UpdateBundleItemsGroupInput {
+  "Bundle items group ID to update"
+  groupId: ID!
+
+  "Bundle ID to udpate"
+  bundleId: ID!
+  
+  "Shop ID for a bundle"
+  shopId: ID!
+
+  "The input for the bundle group"
+  group: BundleItemsGroupInput
+
+  "Client mutation ID"
+  clientMutationId: ID
+}
+
+type UpdateBundleItemsGroupPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The updated product bundle"
   productBundle: ProductBundle!
 }
 
@@ -316,4 +371,14 @@ extend type Mutation {
     createBundleItemsGroup(
       input: CreateBundleItemsGroupInput!
     ): CreateBundleItemsGroupPayload!
+
+    "Removes a single bundle items group for a bundle"
+    removeBundleItemsGroup(
+      input: RemoveBundleItemsGroupInput!
+    ): RemoveBundleItemsGroupPayload!
+
+    "Updates a single bundle items group for a bundle"
+    updateBundleItemsGroup(
+      input: UpdateBundleItemsGroupInput!
+    ): UpdateBundleItemsGroupPayload!
 }
