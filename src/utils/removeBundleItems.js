@@ -7,13 +7,20 @@
  *   Skipping this is not recommended for new code.
  * @returns {Object}  and `updatedItemList` props
  */
- export default async function removeBundleItems(currentItems, inputItems) {
-    const updatedItemList = currentItems || [];
+export default async function removeBundleItems(currentGroups, inputItems) {
+    const updatedGroupList = currentGroups || [];
 
-    for (var index in inputItems) {
-        const currIndex = (currentItems || []).findIndex((value) => value == inputItems[index]);
-        if (currIndex !== -1) updatedItemList.splice(currIndex, 1);
+    for (var item of inputItems) {
+
+        for (var groupIndex in updatedGroupList) {
+            const index = (updatedGroupList[groupIndex].itemIds || []).findIndex((itemId) => itemId == item);
+
+            if (index !== -1) {
+
+                updatedGroupList[groupIndex].itemIds.splice(index, 1);
+            }
+        }
     }
 
-    return { updatedItemList };
+    return { updatedGroupList };
 }
