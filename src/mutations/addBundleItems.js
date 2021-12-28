@@ -10,22 +10,25 @@ const inputSchema = new SimpleSchema({
     },
     "itemIds.$": {
         type: String
-    }
+    },
+    groupId: String
 })
 /**
  * @method createProductBundle
- * @summary - Creates a product bundle for a single bundle
+ * @summary - Add a list of items into the bundle
  * @param {Object} context - an object containing the per-request state
  * @param {Object} input - input arguments for the operation
- * @param {Object} [input.productBundle] - product bundle data
- * @param {Object} [input.shouldCreateFirstVariant] 
+ * @param {Object} [input.itemIds] - a list of item ID'S
+ * @param {Object} [input.shopId] - the ID of the shop
+ * @param {Object} [input.bundleId] - the ID of the bundle
+ * @param {Object} [input.groupId] - the ID of the bundle group
  */
 export default async function addBundleItems(context, input) {
     inputSchema.validate(input);
     const cleanedInput = inputSchema.clean(input);
     const { collections } = context;
     const { Bundles } = collections;
-    const { shopId, bundleId, itemIds } = cleanedInput;
+    const { shopId, bundleId, itemIds, groupId } = cleanedInput;
     const query = {};
     if (shopId) {
         query.shopId = shopId;
@@ -36,11 +39,12 @@ export default async function addBundleItems(context, input) {
     }
     const bundle = await Bundles.findOne(query);
 
-    const { updatedItemList } = await addBundleItemsUtil(bundle?.itemIds, itemIds);
+    const { updatedGroupList } = await addBundleItemsUtil(bundle?.groups, groupId, itemIds);
 
     const updatedBundle = {
         ...bundle,
-        itemIds: updatedItemList
+        updatedAt: new Date(),
+        groups: updatedGroupList
     }
 
     const { result } = await Bundles.replaceOne(query, updatedBundle, { upsert: true });

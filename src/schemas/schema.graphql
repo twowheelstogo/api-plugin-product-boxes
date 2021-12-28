@@ -14,6 +14,9 @@ type ProductBundle {
     "Product limit to choose"
     limit: Int
 
+    "Created date and time"
+    createdAt: DateTime
+
     "Linked product ID"
     productId: ID!
 
@@ -23,20 +26,33 @@ type ProductBundle {
     "Product fields linked"
     product: Product
 
-    "item ID's linked to bundle"
-    itemIds: [ID]
+    "Bundle items groups"
+    groups: [BundleItemsGroup]
 
     "media for a bundle"
-    media: [ImageInfo]
-
-    "Product options to choose"
-    items: [Product]
+    media: [ImageInfo]    
 
     "Updated datetime"
     updatedAt: DateTime!
 
     "Current shop"
     shop: Shop!
+}
+
+type BundleItemsGroup {
+  _id: ID!
+
+  "item ID's linked to bundle"
+  itemIds: [ID]
+
+  "Product options to choose"
+  items: [Product]
+
+  "The title of the group"
+  title: String!
+
+  "Product limit to choose"
+  limit: Int!
 }
 
 extend type CatalogProduct {
@@ -86,6 +102,9 @@ input AddBundleItemsInput {
     
     "Shop ID for a bundle"
     shopId: ID!
+
+    "The ID of the bundle group"
+    groupId: ID!
 
     "Client mutation ID"
     clientMutationId: ID
@@ -194,6 +213,80 @@ type UpdateProductBundlePayload {
   productBundle: ProductBundle
 }
 
+input CreateBundleItemsGroupInput {
+  "The ID of the bundle"
+  bundleId: ID!
+
+  "The title of the group"
+  title: String!
+
+  "The limit selection of items"
+  limit: Int!
+}
+
+type CreateBundleItemsGroupPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The updated product bundle"
+  productBundle: ProductBundle!
+}
+
+input RemoveBundleItemsGroupInput {
+  "Bundle items group ID to update"
+  groupId: ID!
+
+  "Bundle ID to udpate"
+  bundleId: ID!
+  
+  "Shop ID for a bundle"
+  shopId: ID!
+
+  "Client mutation ID"
+  clientMutationId: ID
+}
+
+type RemoveBundleItemsGroupPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The updated product bundle"
+  productBundle: ProductBundle!
+}
+
+input BundleItemsGroupInput {
+  "The title for the bundle"
+  title: String
+
+  "The selection limit for the bundle"
+  limit: Int
+}
+
+input UpdateBundleItemsGroupInput {
+  "Bundle items group ID to update"
+  groupId: ID!
+
+  "Bundle ID to udpate"
+  bundleId: ID!
+  
+  "Shop ID for a bundle"
+  shopId: ID!
+
+  "The input for the bundle group"
+  group: BundleItemsGroupInput
+
+  "Client mutation ID"
+  clientMutationId: ID
+}
+
+type UpdateBundleItemsGroupPayload {
+  "The same string you sent with the mutation params for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The updated product bundle"
+  productBundle: ProductBundle!
+}
+
 extend type Query {
   "Query for a single ProductBundle"
   productBundle(
@@ -273,4 +366,19 @@ extend type Mutation {
       "Mutation input"
         input: RemoveBundleItemsInput!
     ): RemoveBundleItemsPayload!
+
+    "Creates a new group with a list of items allowing to limit the item selection by group, this is for the bundles"
+    createBundleItemsGroup(
+      input: CreateBundleItemsGroupInput!
+    ): CreateBundleItemsGroupPayload!
+
+    "Removes a single bundle items group for a bundle"
+    removeBundleItemsGroup(
+      input: RemoveBundleItemsGroupInput!
+    ): RemoveBundleItemsGroupPayload!
+
+    "Updates a single bundle items group for a bundle"
+    updateBundleItemsGroup(
+      input: UpdateBundleItemsGroupInput!
+    ): UpdateBundleItemsGroupPayload!
 }

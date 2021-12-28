@@ -37,7 +37,7 @@ export default async function removeBundleItems(context, input) {
     }
     const bundle = await Bundles.findOne(query);
 
-    const { updatedItemList } = await removeBundleItemsUtil(bundle?.itemIds, itemIds);
+    const { updatedItemList } = await removeBundleItemsUtil(bundle?.groups, itemIds);
 
     const updatedBundle = {
         ...bundle,
