@@ -37,6 +37,12 @@ type ProductBundle {
 
     "Current shop"
     shop: Shop!
+
+    "item ID's linked to the bundle"
+    itemIds: [ID]
+
+    "Product options to choose"
+    items: [Product]
 }
 
 type BundleItemsGroup {
